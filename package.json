@@ -1,0 +1,7 @@
+{
+    "name": "aws-sam-project",
+    "version": "1.0.0",
+    "scripts": {
+      "install-all": "node install-all.js"
+    }
+  }
