@@ -1,0 +1,14 @@
+# Ignore all node_modules directories
+node_modules/
+**/node_modules/
+
+# Ignore AWS SAM build artifacts
+.aws-sam/
+aws-sam-microservices/
+
+# Ignore SAM configuration files
+samconfig.toml
+
+# Ignore OS-specific or editor-specific files (optional)
+.DS_Store
+.vscode/

@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Futbol demo
+
+Resources:
+  PlayerTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: PlayerTable
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: playerId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: playerId
+          KeyType: HASH
+  PlayersList:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/functions/getPlayers
+      Handler: app.getPlayers
+      Runtime: nodejs20.x
+      Timeout: 30
+      Architectures:
+        - x86_64
+      Events:
+        GetPlayers:
+          Type: Api
+          Properties:
+            Path: /v1/players
+            Method: get
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PlayerTable
+      Environment:
+        Variables:
+          PLAYER_TABLE: !Ref PlayerTable 
+
+  DeletePlayer:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/functions/deletePlayer
+      Handler: app.deletePlayer
+      Runtime: nodejs20.x
+      Timeout: 30
+      Architectures:
+        - x86_64
+      Events:
+        DeletePlayer:
+          Type: Api
+          Properties:
+            Path: /v1/player/{playerId}
+            Method: delete
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PlayerTable
+      Environment:
+        Variables:
+          PLAYER_TABLE: !Ref PlayerTable 
+
+  UpdatePlayer:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/functions/updatePlayer
+      Handler: app.updatePlayer
+      Runtime: nodejs20.x
+      Timeout: 30
+      Architectures:
+        - x86_64
+      Events:
+        DeletePlayer:
+          Type: Api
+          Properties:
+            Path: /v1/player/{playerId}
+            Method: put
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PlayerTable
+      Environment:
+        Variables:
+          PLAYER_TABLE: !Ref PlayerTable 
+
+  CreatePlayer:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/functions/createPlayer
+      Handler: app.createPlayer
+      Runtime: nodejs20.x
+      Timeout: 10
+      Architectures:
+        - x86_64
+      Events:
+        CreatePlayer:
+          Type: Api
+          Properties:
+            Path: /v1/player
+            Method: post
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PlayerTable
+      Environment:
+        Variables:
+          PLAYER_TABLE: !Ref PlayerTable 
